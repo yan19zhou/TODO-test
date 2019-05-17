@@ -1,17 +1,25 @@
 const path = require('path')
-const webpack = require('webpack')
+const createVueLoaderOptions = require('./vue-loader.config')
+const isDev = process.env.NODE_ENV === 'development'
 
 const config = {
     target: 'web',
     entry: path.join(__dirname, '../client/index.js'),
     output: {
         filename: 'bundle.[hash:8].js',
-        path: path.join(__dirname, 'dist')
+        path: path.join(__dirname, '../dist')
     },
     module: {
         rules: [{
+                test: /\.(js|jsx|vue)$/,
+                loader: 'eslint-loader',
+                exclude: /mode_modules/,
+                enforce: "pre"
+            },
+            {
                 test: /\.vue$/,
-                loader: 'vue-loader'
+                loader: 'vue-loader',
+                options: createVueLoaderOptions(isDev)
             },
             {
                 test: /\.jsx$/,
